@@ -26,15 +26,15 @@ namespace AnalyseFinanciereEntreprises.services
             {
                 case "technologie":
                     if (entreprise is EntrepriseTechnologie tech)
-                        entreprisesTech[tech.ID] = tech;
+                        entreprisesTech[tech.Id] = tech;
                     break;
                 case "sante":
                     if (entreprise is EntrepriseSante sante)
-                        entreprisesSante[sante.ID] = sante;
+                        entreprisesSante[sante.Id] = sante;
                     break;
                 case "finance":
                     if (entreprise is EntrepriseFinance finance)
-                        entreprisesFinance[finance.ID] = finance;
+                        entreprisesFinance[finance.Id] = finance;
                     break;
             }
         }
@@ -140,7 +140,7 @@ namespace AnalyseFinanciereEntreprises.services
             Console.WriteLine($"Entreprises supprimees dans le secteur {secteur}:");
             for (int i = 0; i < supprimees.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {supprimees[i].Nom} (ID: {supprimees[i].ID})");
+                Console.WriteLine($"{i + 1}. {supprimees[i].Nom} (ID: {supprimees[i].Id})");
             }
 
             Console.Write("Entrez le numero de l'entreprise a restaurer: ");
@@ -193,7 +193,7 @@ namespace AnalyseFinanciereEntreprises.services
                 decimal benefice = entreprise.CalculerBenefice();
                 string statut = benefice <= 0 ? "PERTE" : "BENEFICE";
         
-                Console.WriteLine($"ID: {entreprise.ID} | Nom: {entreprise.Nom} | " +
+                Console.WriteLine($"ID: {entreprise.Id} | Nom: {entreprise.Nom} | " +
                                   $"Adresse: {entreprise.Adresse} | Revenu: {entreprise.Revenu:C} | " +
                                   $"Depense: {entreprise.Depense:C} | {statut}: {Math.Abs(benefice):C}");
             }

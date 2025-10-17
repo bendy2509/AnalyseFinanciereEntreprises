@@ -3,71 +3,68 @@ namespace AnalyseFinanciereEntreprises.models
     public abstract class Entreprise
     {
         // Champs prives
-        private int id;
-        private string nom;
-        private string adresse;
-        private decimal revenu;
-        private decimal depense;
-        private string pdg;
-        private DateTime dateCreation;
+        private int _id;
+        private string _nom;
+        private string _adresse;
+        private decimal _revenu;
+        private decimal _depense;
+        private string _pdg;
+        private DateTime _dateCreation;
 
         // Proprietes avec encapsulation
-        public int ID
+        public int Id
         {
-            get => id;
-            set => id = value;
+            get => _id;
+            set => _id = value;
         }
 
         public string Nom
         {
-            get => nom;
-            set => nom = value;
+            get => _nom;
+            set => _nom = value;
         }
 
         public string Adresse
         {
-            get => adresse;
-            set => adresse = value;
+            get => _adresse;
+            set => _adresse = value;
         }
 
         public decimal Revenu
         {
-            get => revenu;
-            set => revenu = value;
+            get => _revenu;
+            set => _revenu = value;
         }
 
         public decimal Depense
         {
-            get => depense;
-            set => depense = value;
+            get => _depense;
+            set => _depense = value;
         }
 
-        public string PDG
+        public string Pdg
         {
-            get => pdg;
-            set => pdg = value;
+            get => _pdg;
+            set => _pdg = value;
         }
 
         public DateTime DateCreation
         {
-            get => dateCreation;
-            set => dateCreation = value;
+            get => _dateCreation;
+            set => _dateCreation = value;
         }
 
         // Constructeur protege
         protected Entreprise(int id, string nom, string adresse, decimal revenu, 
                            decimal depense, string pdg, DateTime dateCreation)
         {
-            ID = id;
-            this.nom = nom;
-            this.adresse = adresse;
-            Nom = nom;
-            Adresse = adresse;
-            Revenu = revenu;
-            Depense = depense;
-            this.pdg = pdg;
-            PDG = pdg;
-            DateCreation = dateCreation;
+            Id = id;
+            this._nom = nom;
+            this._adresse = adresse;
+            this.Revenu = revenu;
+            this.Depense = depense;
+            this._pdg = pdg;
+            this.DateCreation = dateCreation;
         }
 
         // Methode pour calculer le benefice/perte
@@ -82,12 +79,12 @@ namespace AnalyseFinanciereEntreprises.models
         // Methode virtuelle pour afficher toutes les informations
         public virtual void AfficherInfos()
         {
-            Console.WriteLine($"ID: {ID}");
+            Console.WriteLine($"ID: {Id}");
             Console.WriteLine($"Nom: {Nom}");
             Console.WriteLine($"Adresse: {Adresse}");
             Console.WriteLine($"Revenu: {Revenu:C}");
             Console.WriteLine($"Depense: {Depense:C}");
-            Console.WriteLine($"PDG: {PDG}");
+            Console.WriteLine($"PDG: {Pdg}");
             Console.WriteLine($"Date de creation: {DateCreation:dd/MM/yyyy}");
             
             decimal benefice = CalculerBenefice();

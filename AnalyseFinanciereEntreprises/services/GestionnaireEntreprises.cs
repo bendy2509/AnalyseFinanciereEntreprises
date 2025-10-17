@@ -5,12 +5,12 @@ namespace AnalyseFinanciereEntreprises.services
     public class GestionnaireEntreprises
     {
         // Dictionnaires pour chaque secteur
-        private Dictionary<int, EntrepriseTechnologie> entreprisesTech = new Dictionary<int, EntrepriseTechnologie>();
-        private Dictionary<int, EntrepriseSante> entreprisesSante = new Dictionary<int, EntrepriseSante>();
-        private Dictionary<int, EntrepriseFinance> entreprisesFinance = new Dictionary<int, EntrepriseFinance>();
+        private Dictionary<int, EntrepriseTechnologie> entreprisesTech = new();
+        private Dictionary<int, EntrepriseSante> entreprisesSante = new();
+        private Dictionary<int, EntrepriseFinance> entreprisesFinance = new();
 
         // Dictionnaire pour les elements supprimes (pour restauration)
-        private Dictionary<string, List<Entreprise>> elementsSupprimes = new Dictionary<string, List<Entreprise>>();
+        private Dictionary<string, List<Entreprise>> elementsSupprimes = new();
 
         public GestionnaireEntreprises()
         {
@@ -19,31 +19,111 @@ namespace AnalyseFinanciereEntreprises.services
             elementsSupprimes["Finance"] = new List<Entreprise>();
         }
 
-        // 1. Methode Enregistrer
+        // Methode Enregistrer
         public void EnregistrerEntreprise(Entreprise entreprise, string secteur)
         {
-            switch (secteur.ToLower())
+            try
             {
-                case "technologie":
-                    if (entreprise is EntrepriseTechnologie tech)
-                        entreprisesTech[tech.Id] = tech;
-                    break;
-                case "sante":
-                    if (entreprise is EntrepriseSante sante)
-                        entreprisesSante[sante.Id] = sante;
-                    break;
-                case "finance":
-                    if (entreprise is EntrepriseFinance finance)
-                        entreprisesFinance[finance.Id] = finance;
-                    break;
+                // Verification secteur
+                if (string.IsNullOrWhiteSpace(secteur))
+                {
+                    Console.WriteLine("Erreur: Le secteur ne peut pas etre vide.");
+                    return;
+                }
+
+                string secteurNormalise = secteur.ToLower().Trim();
+
+                switch (secteurNormalise)
+                {
+                    case "technologie":
+                        EnregistrerEntrepriseTechnologie(entreprise);
+                        break;
+
+                    case "sante":
+                        EnregistrerEntrepriseSante(entreprise);
+                        break;
+
+                    case "finance":
+                        EnregistrerEntrepriseFinance(entreprise);
+                        break;
+
+                    default:
+                        Console.WriteLine(
+                            $"Erreur: Secteur '{secteur}' non reconnu. Utilisez: technologie, sante ou finance.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur inattendue lors de l'enregistrement: {ex.Message}");
             }
         }
 
-        // 2. Methode Afficher toutes les entreprises
+        //Methode pour enregiatrer une entreprise tech
+        private void EnregistrerEntrepriseTechnologie(Entreprise entreprise)
+        {
+            if (entreprise is EntrepriseTechnologie tech)
+            {
+                if (entreprisesTech.ContainsKey(tech.Id))
+                {
+                    Console.WriteLine(
+                        $"Avertissement: L'ID {tech.Id} existe deja dans le secteur Technologie. Remplacement en cours...");
+                }
+
+                entreprisesTech[tech.Id] = tech;
+                Console.WriteLine($"Entreprise technologique '{tech.Nom}' enregistree (ID: {tech.Id})");
+            }
+            else
+            {
+                Console.WriteLine("Erreur: Type d'entreprise incompatible avec le secteur Technologie.");
+            }
+        }
+
+        //Methode pour enregiatrer une entreprise Sante
+        private void EnregistrerEntrepriseSante(Entreprise entreprise)
+        {
+            if (entreprise is EntrepriseSante sante)
+            {
+                if (entreprisesSante.ContainsKey(sante.Id))
+                {
+                    Console.WriteLine(
+                        $"Avertissement: L'ID {sante.Id} existe deja dans le secteur Sante. Remplacement...");
+                }
+
+                entreprisesSante[sante.Id] = sante;
+                Console.WriteLine($"Entreprise sante '{sante.Nom}' enregistree (ID: {sante.Id})");
+            }
+            else
+            {
+                Console.WriteLine("Erreur: Type d'entreprise incompatible avec le secteur Sante.");
+            }
+        }
+
+        //Methode pour enregiatrer une entreprise Finance
+        private void EnregistrerEntrepriseFinance(Entreprise entreprise)
+        {
+            if (entreprise is EntrepriseFinance finance)
+            {
+                if (entreprisesFinance.ContainsKey(finance.Id))
+                {
+                    Console.WriteLine(
+                        $"Avertissement: L'ID {finance.Id} existe deja dans le secteur Finance. Remplacement...");
+                }
+
+                entreprisesFinance[finance.Id] = finance;
+                Console.WriteLine($"Entreprise finance '{finance.Nom}' enregistree (ID: {finance.Id})");
+            }
+            else
+            {
+                Console.WriteLine("Erreur: Type d'entreprise incompatible avec le secteur Finance.");
+            }
+        }
+
+        // Methode Afficher toutes les entreprises
         public void AfficherToutesEntreprises()
         {
             Console.WriteLine("=== TOUTES LES ENTREPRISES ===");
-            
+
             Console.WriteLine("\n--- Secteur Technologie ---");
             foreach (var entreprise in entreprisesTech.Values)
                 entreprise.AfficherInfos();
@@ -57,11 +137,11 @@ namespace AnalyseFinanciereEntreprises.services
                 entreprise.AfficherInfos();
         }
 
-        // 3. Methode AfficherParSecteur
+        // Methode AfficherParSecteur
         public void AfficherParSecteur(string secteur)
         {
             Console.WriteLine($"=== ENTREPRISES DU SECTEUR {secteur.ToUpper()} ===");
-            
+
             switch (secteur.ToLower())
             {
                 case "technologie":
@@ -76,10 +156,13 @@ namespace AnalyseFinanciereEntreprises.services
                     foreach (var entreprise in entreprisesFinance.Values)
                         entreprise.AfficherInfos();
                     break;
-            }
+                default:
+                    Console.WriteLine($"L'entreprise {secteur} est inconnu.");
+                    break;
+            };
         }
 
-        // 4. Methode Modifier (a implementer)
+        //Methode Modifier (a implementer)
         public void ModifierEntreprise(int id, string secteur)
         {
             // Implementation de la modification
@@ -99,6 +182,7 @@ namespace AnalyseFinanciereEntreprises.services
                         entrepriseASupprimer = tech;
                         entreprisesTech.Remove(id);
                     }
+
                     break;
                 case "sante":
                     if (entreprisesSante.TryGetValue(id, out var sante))
@@ -106,6 +190,7 @@ namespace AnalyseFinanciereEntreprises.services
                         entrepriseASupprimer = sante;
                         entreprisesSante.Remove(id);
                     }
+
                     break;
                 case "finance":
                     if (entreprisesFinance.TryGetValue(id, out var finance))
@@ -113,6 +198,7 @@ namespace AnalyseFinanciereEntreprises.services
                         entrepriseASupprimer = finance;
                         entreprisesFinance.Remove(id);
                     }
+
                     break;
             }
 
@@ -167,9 +253,8 @@ namespace AnalyseFinanciereEntreprises.services
                 _ => Enumerable.Empty<Entreprise>()
             };
 
-            var entreprisesTriees = ordreCroissant ? 
-                entreprises.OrderBy(e => e.Nom) : 
-                entreprises.OrderByDescending(e => e.Nom);
+            var entreprisesTriees =
+                ordreCroissant ? entreprises.OrderBy(e => e.Nom) : entreprises.OrderByDescending(e => e.Nom);
 
             Console.WriteLine($"=== ENTREPRISES TRIEES PAR NOM ({(ordreCroissant ? "CROISSANT" : "DECROISSANT")}) ===");
             foreach (var entreprise in entreprisesTriees)
@@ -192,7 +277,7 @@ namespace AnalyseFinanciereEntreprises.services
             {
                 decimal benefice = entreprise.CalculerBenefice();
                 string statut = benefice <= 0 ? "PERTE" : "BENEFICE";
-        
+
                 Console.WriteLine($"ID: {entreprise.Id} | Nom: {entreprise.Nom} | " +
                                   $"Adresse: {entreprise.Adresse} | Revenu: {entreprise.Revenu:C} | " +
                                   $"Depense: {entreprise.Depense:C} | {statut}: {Math.Abs(benefice):C}");

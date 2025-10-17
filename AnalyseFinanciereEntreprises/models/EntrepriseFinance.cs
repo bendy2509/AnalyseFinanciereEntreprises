@@ -2,23 +2,23 @@ namespace AnalyseFinanciereEntreprises.models
 {
     public class EntrepriseFinance : Entreprise
     {
+        // Champs prives specifiques
+        private decimal _capitalSocial;
+        private int _nombreClients;
+        private decimal _rendementInvestissement;
+        
         // Constructeur
         public EntrepriseFinance(int id, string nom, string adresse, decimal revenu,
             decimal depense, string pdg, DateTime dateCreation,
             decimal capitalSocial, int nombreClients, decimal rendementInvestissement)
             : base(id, nom, adresse, revenu, depense, pdg, dateCreation)
         {
-            CapitalSocial = capitalSocial;
-            NombreClients = nombreClients;
-            RendementInvestissement = rendementInvestissement;
+            _capitalSocial = capitalSocial;
+            _nombreClients = nombreClients;
+            _rendementInvestissement = rendementInvestissement;
         }
         
-        // Champs prives specifiques
-        private decimal _capitalSocial;
-        private int _nombreClients;
-        private decimal _rendementInvestissement;
-
-        // Proprietes avec encapsulation
+       // Proprietes avec encapsulation
         public decimal CapitalSocial
         {
             get => _capitalSocial;

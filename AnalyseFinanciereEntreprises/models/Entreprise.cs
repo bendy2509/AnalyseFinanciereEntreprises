@@ -56,15 +56,15 @@ namespace AnalyseFinanciereEntreprises.models
 
         // Constructeur protege
         protected Entreprise(int id, string nom, string adresse, decimal revenu, 
-                           decimal depense, string pdg, DateTime dateCreation)
+            decimal depense, string pdg, DateTime dateCreation)
         {
-            Id = id;
-            Nom = nom;
-            Adresse = adresse;
-            Revenu = revenu;
-            Depense = depense;
-            Pdg = pdg;
-            DateCreation = dateCreation;
+            _id = id;
+            _nom = nom;
+            _adresse = adresse;
+            _revenu = revenu;
+            _depense = depense;
+            _pdg = pdg;
+            _dateCreation = dateCreation;
         }
 
         // Methode pour calculer le benefice/perte

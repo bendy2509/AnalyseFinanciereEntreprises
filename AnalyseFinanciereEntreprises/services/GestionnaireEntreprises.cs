@@ -169,7 +169,7 @@ namespace AnalyseFinanciereEntreprises.services
             Console.WriteLine("Fonctionnalite de modification a implementer");
         }
 
-        // 5. Methode Supprimer
+        //Methode Supprimer
         public void SupprimerEntreprise(int id, string secteur)
         {
             Entreprise entrepriseASupprimer = null;

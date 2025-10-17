@@ -2,30 +2,6 @@ namespace AnalyseFinanciereEntreprises.models
 {
     public class EntrepriseFinance : Entreprise
     {
-        // Champs prives specifiques
-        private decimal capitalSocial;
-        private int nombreClients;
-        private decimal rendementInvestissement;
-
-        // Proprietes avec encapsulation
-        public decimal CapitalSocial
-        {
-            get => capitalSocial;
-            set => capitalSocial = value;
-        }
-
-        public int NombreClients
-        {
-            get => nombreClients;
-            set => nombreClients = value;
-        }
-
-        public decimal RendementInvestissement
-        {
-            get => rendementInvestissement;
-            set => rendementInvestissement = value;
-        }
-
         // Constructeur
         public EntrepriseFinance(int id, string nom, string adresse, decimal revenu,
             decimal depense, string pdg, DateTime dateCreation,
@@ -36,6 +12,31 @@ namespace AnalyseFinanciereEntreprises.models
             NombreClients = nombreClients;
             RendementInvestissement = rendementInvestissement;
         }
+        
+        // Champs prives specifiques
+        private decimal _capitalSocial;
+        private int _nombreClients;
+        private decimal _rendementInvestissement;
+
+        // Proprietes avec encapsulation
+        public decimal CapitalSocial
+        {
+            get => _capitalSocial;
+            set => _capitalSocial = value;
+        }
+
+        public int NombreClients
+        {
+            get => _nombreClients;
+            set => _nombreClients = value;
+        }
+
+        public decimal RendementInvestissement
+        {
+            get => _rendementInvestissement;
+            set => _rendementInvestissement = value;
+        }
+
 
         // Implementation de la methode abstraite
         public override void AfficherInfosSpecifiques()

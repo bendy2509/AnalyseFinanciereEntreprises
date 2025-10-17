@@ -59,12 +59,12 @@ namespace AnalyseFinanciereEntreprises.models
                            decimal depense, string pdg, DateTime dateCreation)
         {
             Id = id;
-            this._nom = nom;
-            this._adresse = adresse;
-            this._revenu = revenu;
-            this._depense = depense;
-            this._pdg = pdg;
-            this._dateCreation = dateCreation;
+            Nom = nom;
+            Adresse = adresse;
+            Revenu = revenu;
+            Depense = depense;
+            Pdg = pdg;
+            DateCreation = dateCreation;
         }
 
         // Methode pour calculer le benefice/perte

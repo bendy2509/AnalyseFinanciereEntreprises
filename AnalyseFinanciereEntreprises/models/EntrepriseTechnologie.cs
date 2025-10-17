@@ -32,9 +32,9 @@ namespace AnalyseFinanciereEntreprises.models
             int nombreEmployesTech, decimal budget, int nombreBrevets)
             : base(id, nom, adresse, revenu, depense, pdg, dateCreation)
         {
-            NombreEmployesTech = nombreEmployesTech;
-            Budget = budget;
-            NombreBrevets = nombreBrevets;
+            this.nombreEmployesTech = nombreEmployesTech;
+            this.budget = budget;
+            this.nombreBrevets = nombreBrevets;
         }
 
         // Implementation de la methode abstraite

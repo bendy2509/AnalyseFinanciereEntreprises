@@ -25,9 +25,8 @@ namespace AnalyseFinanciereEntreprises.models
             int nombreLaboratoires, string certificationSanitaire)
             : base(id, nom, adresse, revenu, depense, pdg, dateCreation)
         {
-            NombreLaboratoires = nombreLaboratoires;
+            this.nombreLaboratoires = nombreLaboratoires;
             this.certificationSanitaire = certificationSanitaire;
-            CertificationSanitaire = certificationSanitaire;
         }
 
         // Implementation de la methode abstraite

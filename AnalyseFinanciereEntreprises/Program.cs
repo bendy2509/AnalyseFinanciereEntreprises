@@ -123,7 +123,7 @@ namespace AnalyseFinanciereEntreprises
                 {
                     Console.ForegroundColor = (j % 2 == 0) ? ConsoleColor.Red : ConsoleColor.Yellow;
                     Console.Write("»");
-                    Thread.Sleep(50);.;t
+                    Thread.Sleep(50);
                 }
                 Console.WriteLine();
             }
@@ -294,7 +294,7 @@ namespace AnalyseFinanciereEntreprises
         static void RestaurerEntreprise(GestionnaireEntreprises gestionnaire)
         {
             Console.Write("Secteur (technologie/sante/finance): ");
-            string secteur = Console.ReadLine();
+            var secteur = Console.ReadLine();
             gestionnaire.RestaurerEntreprises(secteur);
         }
 

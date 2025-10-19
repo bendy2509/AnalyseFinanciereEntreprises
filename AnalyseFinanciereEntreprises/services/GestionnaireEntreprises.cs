@@ -14,9 +14,9 @@ namespace AnalyseFinanciereEntreprises.services
 
         public GestionnaireEntreprises()
         {
-            elementsSupprimes["Technologie"] = new List<Entreprise>();
-            elementsSupprimes["Sante"] = new List<Entreprise>();
-            elementsSupprimes["Finance"] = new List<Entreprise>();
+            elementsSupprimes["technologie"] = new List<Entreprise>();
+            elementsSupprimes["sante"] = new List<Entreprise>();
+            elementsSupprimes["finance"] = new List<Entreprise>();
         }
 
         // Methode Enregistrer
@@ -176,54 +176,83 @@ namespace AnalyseFinanciereEntreprises.services
         {
             Entreprise entrepriseASupprimer = null;
 
-            switch (secteur.ToLower())
+            try
             {
-                case "technologie":
-                    if (entreprisesTech.TryGetValue(id, out var tech))
-                    {
-                        entrepriseASupprimer = tech;
-                        entreprisesTech.Remove(id);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Entreprise avec ID {id} non trouvee dans le secteur Technologie.");
-                    }
-                    break;
-                case "sante":
-                    if (entreprisesSante.TryGetValue(id, out var sante))
-                    {
-                        entrepriseASupprimer = sante;
-                        entreprisesSante.Remove(id);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Entreprise avec ID {id} non trouvee dans le secteur Sante.");
-                    }
-                    break;
-                case "finance":
-                    if (entreprisesFinance.TryGetValue(id, out var finance))
-                    {
-                        entrepriseASupprimer = finance;
-                        entreprisesFinance.Remove(id);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Entreprise avec ID {id} non trouvee dans le secteur Finance.");
-                    }
-                    break;
-                default:
-                    Console.WriteLine($"Le secteur {secteur} est inexistant");
-                    break;
-            }
+                if (string.IsNullOrWhiteSpace(secteur))
+                {
+                    Console.WriteLine($"Erreur: Le secteur ne peut pas etre vide.");
+                    return;
+                }
 
-            if (entrepriseASupprimer != null)
-            {
-                elementsSupprimes[secteur].Add(entrepriseASupprimer);
-                Console.WriteLine($"Entreprise {id} supprimee avec succes.");
+                switch (secteur.ToLower().Trim())
+                {
+                    case "technologie":
+                        entrepriseASupprimer = GererSuppressionAvecTryCatch(
+                            id,
+                            entreprisesTech,
+                            $"Entreprise avec ID {id} non trouvee dans le secteur Technologie.",
+                            $"Erreur lors de la suppression dans le secteur Technologie: "
+                        );
+                        break;
+
+                    case "sante":
+                        entrepriseASupprimer = GererSuppressionAvecTryCatch(
+                            id,
+                            entreprisesSante,
+                            $"Entreprise avec ID {id} non trouvee dans le secteur Sante.",
+                            $"Erreur lors de la suppression dans le secteur Sante: "
+                        );
+                        break;
+
+                    case "finance":
+                        entrepriseASupprimer = GererSuppressionAvecTryCatch(
+                            id,
+                            entreprisesFinance,
+                            $"Entreprise avec ID {id} non trouvee dans le secteur Finance.",
+                            $"Erreur lors de la suppression dans le secteur Finance: "
+                        );
+                        break;
+
+                    default:
+                        Console.WriteLine($"Erreur: Le secteur '{secteur}' est inexistant.");
+                        break;
+                }
+
+                if (entrepriseASupprimer != null)
+                {
+                    elementsSupprimes[secteur].Add(entrepriseASupprimer);
+                    Console.WriteLine($"Entreprise '{entrepriseASupprimer.Nom}' (ID: {id}) supprimee avec succes.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Entreprise non trouvee.");
+                Console.WriteLine($"Erreur inattendue lors de la suppression: {ex.Message}");
+            }
+        }
+
+        private T GererSuppressionAvecTryCatch<T>(
+            int id,
+            Dictionary<int, T> dictionnaire,
+            string messageNonTrouve,
+            string messageErreur) where T : Entreprise
+        {
+            try
+            {
+                if (dictionnaire.TryGetValue(id, out T entreprise))
+                {
+                    dictionnaire.Remove(id);
+                    return entreprise;
+                }
+                else
+                {
+                    Console.WriteLine(messageNonTrouve);
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{messageErreur}{ex.Message}");
+                return null;
             }
         }
 
@@ -232,13 +261,11 @@ namespace AnalyseFinanciereEntreprises.services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(secteur) || !elementsSupprimes.ContainsKey(secteur))
+                if (string.IsNullOrWhiteSpace(secteur) || !elementsSupprimes.TryGetValue(secteur.ToLower().Trim(), out var supprimees))
                 {
                     Console.WriteLine($"Erreur: Secteur '{secteur}' invalide.");
                     return;
                 }
-
-                var supprimees = elementsSupprimes[secteur];
 
                 if (supprimees.Count == 0)
                 {
@@ -261,12 +288,12 @@ namespace AnalyseFinanciereEntreprises.services
                             continuer = false;
                             Console.WriteLine("Operation terminee.");
                             break;
-                        
+
                         case "tous":
                             RestaurerToutes(supprimees, secteur);
                             continuer = false;
                             break;
-                        
+
                         default:
                         {
                             if (int.TryParse(input, out int choix) && choix > 0 && choix <= supprimees.Count)
@@ -277,6 +304,7 @@ namespace AnalyseFinanciereEntreprises.services
                             {
                                 Console.WriteLine("Choix invalide.");
                             }
+
                             break;
                         }
                     }

@@ -4,13 +4,45 @@ namespace AnalyseFinanciereEntreprises.services
 {
     public static class Utilitaires
     {
+        public static void AffichageConsole(string label ="", string champ = "")
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\n──────────────────────────────────────────────");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($" ➤ {champ}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(label);
+            Console.ResetColor();
+
+        }
+        
+        public static void Avertissement(string label)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\n──────────────────────────────────────────────");
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write($"{label}");
+            Console.ResetColor();
+
+        }
+
+        public static void Success(string label)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\n──────────────────────────────────────────────");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.Write($"{label}");
+            Console.ResetColor();
+        }
+        
         public static string LireSecteurValide()
         {
             string secteur;
 
             while (true)
             {
-                Console.Write("Secteur (technologie/sante/finance): ");
+                AffichageConsole("(technologie / sante / finance) : ", "secteur");
+
                 secteur = Console.ReadLine()?.Trim().ToLower();
 
                 if (secteur == "technologie" || secteur == "sante" || secteur == "finance")
@@ -18,18 +50,18 @@ namespace AnalyseFinanciereEntreprises.services
                     return secteur;
                 }
 
-                Console.WriteLine(" Choix invalide ! Veuillez saisir 'technologie', 'sante' ou 'finance'.");
+                Avertissement(" Choix invalide ! Veuillez saisir 'technologie', 'sante' ou 'finance'.");
             }
         }
         
         public static int LireEntier(string label)
         {
             int valeur;
-            Console.Write(label + ": ");
+            AffichageConsole(champ: label + ": ");
             while (!int.TryParse(Console.ReadLine(), out valeur))
             {
-                Console.WriteLine("Entrée invalide, réessayez : ");
-                Console.Write(label + ": ");
+                Avertissement("Entrée invalide, réessayez : ");
+                AffichageConsole(label + ": ");
             }
             return valeur;
         }
@@ -39,12 +71,12 @@ namespace AnalyseFinanciereEntreprises.services
             string saisie;
             do
             {
-                Console.Write(label + " : ");
+                AffichageConsole(champ:label + " : ");
                 saisie = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(saisie))
                 {
-                    Console.WriteLine("Ce champ est obligatoire !");
+                    Avertissement(" Ce champ est obligatoire !");
                 }
 
             } while (string.IsNullOrWhiteSpace(saisie));
@@ -55,11 +87,11 @@ namespace AnalyseFinanciereEntreprises.services
         public static decimal LireDecimal(string label)
         {
             decimal valeur;
-            Console.Write(label + ": ");
+            AffichageConsole(champ:label + ": ");
             while (!decimal.TryParse(Console.ReadLine(),out valeur))
             {
-                Console.WriteLine("Entrée invalide, réessayez avec un decimal/nombre : ");
-                Console.Write(label + ": ");
+                Avertissement("Entrée invalide, réessayez avec un decimal/nombre : ");
+                AffichageConsole(label + ": ");
             }
             return valeur;
         }
@@ -70,7 +102,7 @@ namespace AnalyseFinanciereEntreprises.services
 
             while (true)
             {
-                Console.Write($"{label} :  ");
+                AffichageConsole(champ:label +":  ");
                 string saisie = Console.ReadLine();
 
                 if (DateTime.TryParse(saisie, out dateTime))
@@ -79,10 +111,9 @@ namespace AnalyseFinanciereEntreprises.services
                     {
                        return dateTime; 
                     }
-                    
-                    Console.WriteLine("Date invalide ! Veuillez réessayer avec une date inférieure ou égale à aujourd'hui");  
+                    Avertissement("Date invalide ! Veuillez réessayer avec une date inférieure ou égale à aujourd'hui");  
                 }
-                Console.WriteLine("Date invalide ! Veuillez réessayer (ex: 2024-05-10).");
+                Avertissement("Date invalide ! Veuillez réessayer (ex: 2024-05-10).");
             }
         }
         

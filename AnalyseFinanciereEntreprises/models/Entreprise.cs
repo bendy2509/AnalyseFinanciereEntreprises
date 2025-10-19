@@ -82,14 +82,14 @@ namespace AnalyseFinanciereEntreprises.models
             Console.WriteLine($"ID: {Id}");
             Console.WriteLine($"Nom: {Nom}");
             Console.WriteLine($"Adresse: {Adresse}");
-            Console.WriteLine($"Revenu: {Revenu:C}");
-            Console.WriteLine($"Depense: {Depense:C}");
+            Console.WriteLine($"Revenu: {Revenu:N}HTG");
+            Console.WriteLine($"Depense: {Depense:N}HTG");
             Console.WriteLine($"PDG: {Pdg}");
             Console.WriteLine($"Date de creation: {DateCreation:dd/MM/yyyy}");
             
             decimal benefice = CalculerBenefice();
             string type = benefice <= 0 ? "PERTE" : "BENEFICE";
-            Console.WriteLine($"{type}: {Math.Abs(benefice):C}");
+            Console.WriteLine($"{type}: {Math.Abs(benefice):N}HTG");
         }
     }
 }

@@ -79,57 +79,61 @@ namespace AnalyseFinanciereEntreprises
         static void AfficherEcranBienvenue()
         {
             Console.Clear();
-            
-            // En-tête institution
-            CentrerTexte("CAMPUS HENRY CHRISTOPHE DE LIMONADE (CHC-L)");
-            CentrerTexte("Faculté des Sciences et de Génie (FSG)");
-            Console.WriteLine(new string('-', 120));  
+            Console.ForegroundColor = ConsoleColor.Cyan;
 
-            // Titre principal
+            // === En-tête institution ===
+            CentrerTexte("═══════════════════════════════════════════════════════════════════════════════════════════════");
+            CentrerTexte("     CAMPUS HENRY CHRISTOPHE DE LIMONADE (CHC-L)");
+            CentrerTexte("     Faculté des Sciences et de Génie (FSG)");
+            CentrerTexte("═══════════════════════════════════════════════════════════════════════════════════════════════\n");
+
+            // === Titre principal ===
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            CentrerTexte("SYSTÈME D'ANALYSE FINANCIÈRE");
+            CentrerTexte("DES ENTREPRISES HAÏTIENNES");
+            CentrerTexte("Année fiscale 2024 - 2025\n");
+
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            // === Préparé par ===
             Console.WriteLine();
-            CentrerTexte("SYSTÈME D'ANALYSE FINANCIÈRE DES ENTREPRISES HAÏTIENNES\n\n\n");
-            Console.WriteLine();
+            CentrerTexte("Préparé par :");
+            CentrerTexte(" ALBIKENDY JEAN | Bendy SERVILUS | Blemy JOSEPH\n");
 
-            // Préparé par
-            CentrerTexte("\n\nPréparé par : ALBIKENDY JEAN | Bendy SERVILUS | Blemy JOSEPH ");
-            Console.WriteLine();
+            // === Professeur ===
+            CentrerTexte("Soumis au professeur : Jaures PIERRE\n");
 
-            // Professeur
-            CentrerTexte("\nSoumis au professeur : Jaures PIERRE");
-            Console.WriteLine();
+            // === Date ===
+            CentrerTexte("Date de remise : 19 octobre 2025\n");
 
-            // Date
-            Console.Write(new string(' ', 50));
-            CentrerTexte("\n\n\t\t\t\t\t\t\t\t Date de remise : 19 octobre 2025\n");
-
-            CentrerTexte("\n\t\t\t\tAppuyez sur une touche pour continuer...");
+            // === Attente utilisateur ===
+            Console.ForegroundColor = ConsoleColor.Green;
+            CentrerTexte("Appuyez sur une touche pour continuer...");
             Console.ReadKey();
 
-            // Animation
+            // === Animation de chargement ===
             AnimationChargement();
         }
 
-        // === ANIMATION DE CHARGEMENT ===
         static void AnimationChargement()
         {
             Console.Clear();
-            CentrerTexte("Chargement du système...", ConsoleColor.Yellow);
-            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            CentrerTexte("Chargement du système...\n");
+            Console.ResetColor();
 
-            for (int i = 0; i < 1; i++)
+            int leftMargin = (Console.WindowWidth - 22) / 2;
+
+            Console.CursorLeft = leftMargin;
+            for (int j = 0; j < 22; j++)
             {
-                Console.Write(new string(' ', 40));
-                for (int j = 0; j < 20; j++)
-                {
-                    Console.ForegroundColor = (j % 2 == 0) ? ConsoleColor.Red : ConsoleColor.Yellow;
-                    Console.Write("»");
-                    Thread.Sleep(50);.;t
-                }
-                Console.WriteLine();
+                Console.ForegroundColor = (j % 2 == 0) ? ConsoleColor.Green : ConsoleColor.Cyan;
+                Console.Write("");
+                Thread.Sleep(60);
             }
 
             Console.ResetColor();
-            Thread.Sleep(300);
+            Thread.Sleep(400);
             Console.Clear();
         }
 
@@ -146,23 +150,47 @@ namespace AnalyseFinanciereEntreprises
         // === MENU PRINCIPAL ===
         static void AfficherMenu()
         {
-            Console.WriteLine("\n  ╔══════════════════════════════════════════════════════════════════════════════╗");
-            Console.WriteLine("  ║      SYSTÈME D'ANALYSE FINANCIÈRE DES ENTREPRISES HAÏTIENNES                 ║");
-            Console.WriteLine("  ╠══════════════════════════════════════════════════════════════════════════════╣");
-            Console.WriteLine("  ║  1. Enregistrer une entreprise                                               ║");
-            Console.WriteLine("  ║  2. Afficher toutes les entreprises                                          ║");
-            Console.WriteLine("  ║  3. Afficher par secteur                                                     ║");
-            Console.WriteLine("  ║  4. Modifier une entreprise                                                  ║");
-            Console.WriteLine("  ║  5. Supprimer une entreprise                                                 ║");
-            Console.WriteLine("  ║  6. Restaurer une entreprise                                                 ║");
-            Console.WriteLine("  ║  7. Trier les entreprises                                                    ║");
-            Console.WriteLine("  ║  8. Rapport global                                                           ║");
-            Console.WriteLine("  ║  9. Analyse : Plus haut revenu                                               ║");
-            Console.WriteLine("  ║ 10. Analyse : Plus bas revenu                                                ║");
-            Console.WriteLine("  ║ 11. Bénéfices sectoriels et globaux                                          ║");
-            Console.WriteLine("  ║  0. Quitter                                                                  ║");
-            Console.WriteLine("  ╚══════════════════════════════════════════════════════════════════════════════╝");
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
 
+            string titre = "SYSTÈME D'ANALYSE FINANCIÈRE DES ENTREPRISES HAÏTIENNES";
+            int largeur = 85;
+            string ligneHaut = "╔" + new string('═', largeur) + "╗";
+            string ligneMilieu = "╠" + new string('═', largeur) + "╣";
+            string ligneBas = "╚" + new string('═', largeur) + "╝";
+
+            Console.WriteLine();
+            Console.WriteLine("  " + ligneHaut);
+            Console.WriteLine("  ║" + titre.PadLeft((largeur + titre.Length) / 2).PadRight(largeur) + "║");
+            Console.WriteLine("  " + ligneMilieu);
+
+            Console.ForegroundColor = ConsoleColor.White;
+
+            string[] options =
+            {
+                "1. Enregistrer une entreprise",
+                "2. Afficher toutes les entreprises",
+                "3. Afficher par secteur",
+                "4. Modifier une entreprise",
+                "5. Supprimer une entreprise",
+                "6. Restaurer une entreprise",
+                "7. Trier les entreprises",
+                "8. Rapport global",
+                "9. Analyse : Plus haut revenu",
+                "10. Analyse : Plus bas revenu",
+                "11. Bénéfices sectoriels et globaux",
+                "0. Quitter"
+            };
+
+            foreach (string option in options)
+            {
+                Console.WriteLine($"  ║  {option.PadRight(largeur - 2)}║");
+            }
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("  " + ligneBas);
+
+            Console.ResetColor();
             Console.Write("\n  Votre choix : ");
         }
 
@@ -221,8 +249,8 @@ namespace AnalyseFinanciereEntreprises
             // La saisie du PDG
             string pdg = Utilitaires.LireTexteNonVide("PDG");
 
-            Console.Write("Date de creation (yyyy-mm-dd): ");
-            DateTime dateCreation = DateTime.Parse(Console.ReadLine());
+            // La saisie de la Date de creation (yyyy-mm-dd)
+            DateTime dateCreation = Utilitaires.LireDateTime("Date de creation (format: yyyy-MM-dd)");
 
             Entreprise nouvelleEntreprise;
 
@@ -270,7 +298,7 @@ namespace AnalyseFinanciereEntreprises
             }
 
             gestionnaire.EnregistrerEntreprise(nouvelleEntreprise, secteur);
-            Console.WriteLine("Entreprise enregistrée avec succès!");
+            Utilitaires.Success("Entreprise enregistrée avec succès!");
         }
 
         static void AfficherParSecteur(GestionnaireEntreprises gestionnaire)

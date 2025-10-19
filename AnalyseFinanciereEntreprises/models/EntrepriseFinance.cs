@@ -41,7 +41,7 @@ namespace AnalyseFinanciereEntreprises.models
         // Implementation de la methode abstraite
         public override void AfficherInfosSpecifiques()
         {
-            Console.WriteLine($"Capital social: {CapitalSocial:C}");
+            Console.WriteLine($"Capital social: {CapitalSocial:N}HTG");
             Console.WriteLine($"Nombre de clients: {NombreClients}");
             Console.WriteLine($"Rendement d'investissement: {RendementInvestissement:P}");
         }

@@ -41,7 +41,7 @@ namespace AnalyseFinanciereEntreprises.models
         public override void AfficherInfosSpecifiques()
         {
             Console.WriteLine($"Nombre d'employes tech: {NombreEmployesTech}");
-            Console.WriteLine($"Budget: {Budget:C}");
+            Console.WriteLine($"Budget: {Budget:N}HTG");
             Console.WriteLine($"Nombre de brevets: {NombreBrevets}");
         }
 

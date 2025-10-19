@@ -123,7 +123,7 @@ namespace AnalyseFinanciereEntreprises
                 {
                     Console.ForegroundColor = (j % 2 == 0) ? ConsoleColor.Red : ConsoleColor.Yellow;
                     Console.Write("»");
-                    Thread.Sleep(50);
+                    Thread.Sleep(50);.;t
                 }
                 Console.WriteLine();
             }
@@ -197,27 +197,29 @@ namespace AnalyseFinanciereEntreprises
 
         static void EnregistrerEntreprise(GestionnaireEntreprises gestionnaire)
         {
+            Console.Clear();
             Console.WriteLine("=== ENREGISTRER UNE ENTREPRISE ===");
-            Console.Write("Secteur (technologie/sante/finance): ");
-            string secteur = Console.ReadLine();
+            
+            // La saisie du Secteur (technologie/sante/finance)
+            string secteur = Utilitaires.LireSecteurValide();
+            
+            // La Saisie de l'id
+            int id = Utilitaires.LireEntier("ID");
+            
+            // la saisie du nom
+            string nom = Utilitaires.LireTexteNonVide("Nom");
 
-            Console.Write("ID: ");
-            int id = int.Parse(Console.ReadLine());
+            // La saisie de l'Adresse
+            string adresse = Utilitaires.LireTexteNonVide("Adresse");
 
-            Console.Write("Nom: ");
-            string nom = Console.ReadLine();
+            // La saisie du Revenu
+            decimal revenu = Utilitaires.LireDecimal("Revenu");
 
-            Console.Write("Adresse: ");
-            string adresse = Console.ReadLine();
+            // La saisie du Depense
+            decimal depense = Utilitaires.LireDecimal("Depense");
 
-            Console.Write("Revenu: ");
-            decimal revenu = decimal.Parse(Console.ReadLine());
-
-            Console.Write("Depense: ");
-            decimal depense = decimal.Parse(Console.ReadLine());
-
-            Console.Write("PDG: ");
-            string pdg = Console.ReadLine();
+            // La saisie du PDG
+            string pdg = Utilitaires.LireTexteNonVide("PDG");
 
             Console.Write("Date de creation (yyyy-mm-dd): ");
             DateTime dateCreation = DateTime.Parse(Console.ReadLine());
@@ -227,37 +229,37 @@ namespace AnalyseFinanciereEntreprises
             switch (secteur.ToLower())
             {
                 case "technologie":
-                    Console.Write("Nombre d'employes tech: ");
-                    int nbEmployesTech = int.Parse(Console.ReadLine());
+                    // La saisie du Nombre d'employes tech
+                    int nbEmployesTech = Utilitaires.LireEntier("Nombre d'employes tech");
 
-                    Console.Write("Budget: ");
-                    decimal budget = decimal.Parse(Console.ReadLine());
+                    // La saisie du Budget
+                    decimal budget = Utilitaires.LireDecimal("Budget");
 
-                    Console.Write("Nombre de brevets: ");
-                    int nbBrevets = int.Parse(Console.ReadLine());
+                    // La saisie du Nombre de brevets
+                    int nbBrevets =Utilitaires.LireEntier("Nombre de brevets");
 
                     nouvelleEntreprise = new EntrepriseTechnologie(id, nom, adresse, revenu, depense, pdg, dateCreation, nbEmployesTech, budget, nbBrevets);
                     break;
 
                 case "sante":
-                    Console.Write("Nombre de laboratoires: ");
-                    int nbLabos = int.Parse(Console.ReadLine());
+                    // La saisie du Nombre de laboratoire
+                    int nbLabos = Utilitaires.LireEntier("Nombre de laboratoires");
 
-                    Console.Write("Certification sanitaire: ");
-                    string certification = Console.ReadLine();
+                    // La saisie de laCertification sanitaire 
+                    string certification = Utilitaires.LireTexteNonVide("Certification sanitaire");
 
                     nouvelleEntreprise = new EntrepriseSante(id, nom, adresse, revenu, depense, pdg, dateCreation, nbLabos, certification);
                     break;
 
                 case "finance":
-                    Console.Write("Capital social: ");
-                    decimal capital = decimal.Parse(Console.ReadLine());
+                    // La saisie du Capital social
+                    decimal capital = Utilitaires.LireDecimal("Capital social");
 
-                    Console.Write("Nombre de clients: ");
-                    int nbClients = int.Parse(Console.ReadLine());
+                    // La saisie du Nombre de clients
+                    int nbClients = Utilitaires.LireEntier("Nombre de clients");
 
-                    Console.Write("Rendement d'investissement (decimal): ");
-                    decimal rendement = decimal.Parse(Console.ReadLine());
+                    // La saisie du Rendement d'investissement
+                    decimal rendement = Utilitaires.LireDecimal("Rendement d'investissement");
 
                     nouvelleEntreprise = new EntrepriseFinance(id, nom, adresse, revenu, depense, pdg, dateCreation, capital, nbClients, rendement);
                     break;

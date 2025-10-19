@@ -64,5 +64,27 @@ namespace AnalyseFinanciereEntreprises.services
             return valeur;
         }
 
+        public static DateTime LireDateTime(string label)
+        {
+            DateTime dateTime;
+
+            while (true)
+            {
+                Console.Write($"{label} :  ");
+                string saisie = Console.ReadLine();
+
+                if (DateTime.TryParse(saisie, out dateTime))
+                {
+                    if (dateTime <= DateTime.Now)
+                    {
+                       return dateTime; 
+                    }
+                    
+                    Console.WriteLine("Date invalide ! Veuillez réessayer avec une date inférieure ou égale à aujourd'hui");  
+                }
+                Console.WriteLine("Date invalide ! Veuillez réessayer (ex: 2024-05-10).");
+            }
+        }
+        
     }
 }

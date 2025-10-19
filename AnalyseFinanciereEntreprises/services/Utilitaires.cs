@@ -64,5 +64,34 @@ namespace AnalyseFinanciereEntreprises.services
             return valeur;
         }
 
+
+        #region Modification
+        public static string LireValeur(string prompt, string valeurActuelle)
+        {
+            Console.Write($"{prompt}: ");
+            var input = Console.ReadLine();
+            return string.IsNullOrWhiteSpace(input) ? valeurActuelle : input.Trim();
+        }
+
+        public static decimal LireDecimal(string prompt, decimal valeurActuelle)
+        {
+            Console.Write($"{prompt}: ");
+            string input = Console.ReadLine();
+            return string.IsNullOrWhiteSpace(input) || !decimal.TryParse(input, out decimal result) || result < 0
+                ? valeurActuelle
+                : result;
+        }
+
+        public static int LireInt(string prompt, int valeurActuelle)
+        {
+            Console.Write($"{prompt}: ");
+            string input = Console.ReadLine();
+            return string.IsNullOrWhiteSpace(input) || !int.TryParse(input, out int result) || result < 0
+                ? valeurActuelle
+                : result;
+        }
+        #endregion
+        
+
     }
 }

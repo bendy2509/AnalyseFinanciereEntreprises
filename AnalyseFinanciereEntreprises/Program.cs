@@ -35,7 +35,7 @@ namespace AnalyseFinanciereEntreprises
                         AfficherParSecteur(gestionnaire);
                         break;
                     case "4":
-                        gestionnaire.ModifierEntreprise(0, "");
+                        ModifierEntreprise(gestionnaire);
                         break;
                     case "5":
                         SupprimerEntreprise(gestionnaire);
@@ -166,7 +166,7 @@ namespace AnalyseFinanciereEntreprises
             Console.Write("\n  Votre choix : ");
         }
 
-        // === AUTRES MÉTHODES DE TON PROGRAMME ===
+        // === AUTRES MÉTHODES  ===
         static void InitialiserDonneesExemple(GestionnaireEntreprises gestionnaire)
         {
             var tech1 = new EntrepriseTechnologie(1, "TechHaiti", "Port-au-Prince", 5000000, 3000000,
@@ -280,6 +280,23 @@ namespace AnalyseFinanciereEntreprises
             gestionnaire.AfficherParSecteur(secteur);
         }
 
+        static void ModifierEntreprise(GestionnaireEntreprises gestionnaire)
+        {
+            Console.WriteLine("=== MODIFIER UNE ENTREPRISE ===");
+    
+            string secteur = Utilitaires.LireSecteurValide();
+    
+            Console.Write("ID de l'entreprise a modifier: ");
+            if (int.TryParse(Console.ReadLine(), out int id) && id > 0)
+            {
+                gestionnaire.ModifierEntreprise(id, secteur);
+            }
+            else
+            {
+                Console.WriteLine("ID invalide.");
+            }
+        }
+        
         static void SupprimerEntreprise(GestionnaireEntreprises gestionnaire)
         {
             Console.Write("Secteur (technologie/sante/finance): ");

@@ -1,4 +1,5 @@
 using AnalyseFinanciereEntreprises.models;
+using AnalyseFinanciereEntreprises.services;
 
 namespace AnalyseFinanciereEntreprises.services
 {
@@ -164,11 +165,83 @@ namespace AnalyseFinanciereEntreprises.services
             ;
         }
 
-        //Methode Modifier (a implementer)
+        //Methode Modifier
         public void ModifierEntreprise(int id, string secteur)
         {
-            // Implementation de la modification
-            Console.WriteLine("Fonctionnalite de modification a implementer");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(secteur))
+                {
+                    Console.WriteLine("Erreur: Secteur vide.");
+                    return;
+                }
+
+                bool succes = secteur.ToLower().Trim() switch
+                {
+                    "technologie" => ModifierAvecTryCatch(id, entreprisesTech, ModifierInfosTechnologie),
+                    "sante" => ModifierAvecTryCatch(id, entreprisesSante, ModifierInfosSante),
+                    "finance" => ModifierAvecTryCatch(id, entreprisesFinance, ModifierInfosFinance),
+                    _ => false
+                };
+
+                Console.WriteLine(succes ? "Modification reussie." : "Modification echouee.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur: {ex.Message}");
+            }
+        }
+
+        private bool ModifierAvecTryCatch<T>(int id, Dictionary<int, T> dict, Action<T> modifierSpecifique)
+            where T : Entreprise
+        {
+            if (!dict.TryGetValue(id, out T entreprise))
+            {
+                Console.WriteLine($"ID {id} non trouve.");
+                return false;
+            }
+
+            Console.WriteLine($"\nModification: {entreprise.Nom} (ID: {id})");
+
+            ModifierInfosBase(entreprise);
+            modifierSpecifique(entreprise);
+
+            return true;
+        }
+
+        private void ModifierInfosBase(Entreprise e)
+        {
+            Console.WriteLine("\nInfos base:");
+            e.Nom = Utilitaires.LireValeur($"Nom ({e.Nom})", e.Nom);
+            e.Adresse = Utilitaires.LireValeur($"Adresse ({e.Adresse})", e.Adresse);
+            e.Revenu = Utilitaires.LireDecimal($"Revenu ({e.Revenu:C})", e.Revenu);
+            e.Depense = Utilitaires.LireDecimal($"Depense ({e.Depense:C})", e.Depense);
+            e.Pdg = Utilitaires.LireValeur($"PDG ({e.Pdg})", e.Pdg);
+        }
+
+        private void ModifierInfosTechnologie(EntrepriseTechnologie t)
+        {
+            Console.WriteLine("\nInfos tech:");
+            t.NombreEmployesTech = Utilitaires.LireInt($"Employes tech ({t.NombreEmployesTech})", t.NombreEmployesTech);
+            t.Budget = Utilitaires.LireDecimal($"Budget ({t.Budget:C})", t.Budget);
+            t.NombreBrevets = Utilitaires.LireInt($"Brevets ({t.NombreBrevets})", t.NombreBrevets);
+        }
+
+        private void ModifierInfosSante(EntrepriseSante s)
+        {
+            Console.WriteLine("\nInfos sante:");
+            s.NombreLaboratoires = Utilitaires.LireInt($"Laboratoires ({s.NombreLaboratoires})", s.NombreLaboratoires);
+            s.CertificationSanitaire =
+                Utilitaires.LireValeur($"Certification ({s.CertificationSanitaire})", s.CertificationSanitaire);
+        }
+
+        private void ModifierInfosFinance(EntrepriseFinance f)
+        {
+            Console.WriteLine("\nInfos finance:");
+            f.CapitalSocial = Utilitaires.LireDecimal($"Capital ({f.CapitalSocial:C})", f.CapitalSocial);
+            f.NombreClients = Utilitaires.LireInt($"Clients ({f.NombreClients})", f.NombreClients);
+            f.RendementInvestissement =
+                Utilitaires.LireDecimal($"Rendement ({f.RendementInvestissement:P2})", f.RendementInvestissement);
         }
 
         //Methode Supprimer
@@ -261,7 +334,8 @@ namespace AnalyseFinanciereEntreprises.services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(secteur) || !elementsSupprimes.TryGetValue(secteur.ToLower().Trim(), out var supprimees))
+                if (string.IsNullOrWhiteSpace(secteur) ||
+                    !elementsSupprimes.TryGetValue(secteur.ToLower().Trim(), out var supprimees))
                 {
                     Console.WriteLine($"Erreur: Secteur '{secteur}' invalide.");
                     return;

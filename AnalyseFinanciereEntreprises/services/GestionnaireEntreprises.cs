@@ -159,7 +159,9 @@ namespace AnalyseFinanciereEntreprises.services
                 default:
                     Console.WriteLine($"L'entreprise {secteur} est inconnu.");
                     break;
-            };
+            }
+
+            ;
         }
 
         //Methode Modifier (a implementer)
@@ -182,7 +184,10 @@ namespace AnalyseFinanciereEntreprises.services
                         entrepriseASupprimer = tech;
                         entreprisesTech.Remove(id);
                     }
-
+                    else
+                    {
+                        Console.WriteLine($"Entreprise avec ID {id} non trouvee dans le secteur Technologie.");
+                    }
                     break;
                 case "sante":
                     if (entreprisesSante.TryGetValue(id, out var sante))
@@ -190,7 +195,10 @@ namespace AnalyseFinanciereEntreprises.services
                         entrepriseASupprimer = sante;
                         entreprisesSante.Remove(id);
                     }
-
+                    else
+                    {
+                        Console.WriteLine($"Entreprise avec ID {id} non trouvee dans le secteur Sante.");
+                    }
                     break;
                 case "finance":
                     if (entreprisesFinance.TryGetValue(id, out var finance))
@@ -198,7 +206,13 @@ namespace AnalyseFinanciereEntreprises.services
                         entrepriseASupprimer = finance;
                         entreprisesFinance.Remove(id);
                     }
-
+                    else
+                    {
+                        Console.WriteLine($"Entreprise avec ID {id} non trouvee dans le secteur Finance.");
+                    }
+                    break;
+                default:
+                    Console.WriteLine($"Le secteur {secteur} est inexistant");
                     break;
             }
 
@@ -213,43 +227,217 @@ namespace AnalyseFinanciereEntreprises.services
             }
         }
 
-        // 6. Methode Restaurer
+        // Methode Restaurer
         public void RestaurerEntreprises(string secteur)
         {
-            var supprimees = elementsSupprimes[secteur];
-            if (supprimees.Count == 0)
+            try
             {
-                Console.WriteLine($"Aucune entreprise a restaurer dans le secteur {secteur}.");
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(secteur) || !elementsSupprimes.ContainsKey(secteur))
+                {
+                    Console.WriteLine($"Erreur: Secteur '{secteur}' invalide.");
+                    return;
+                }
 
-            Console.WriteLine($"Entreprises supprimees dans le secteur {secteur}:");
-            for (int i = 0; i < supprimees.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {supprimees[i].Nom} (ID: {supprimees[i].Id})");
-            }
+                var supprimees = elementsSupprimes[secteur];
 
-            Console.Write("Entrez le numero de l'entreprise a restaurer: ");
-            if (int.TryParse(Console.ReadLine(), out int choix) && choix > 0 && choix <= supprimees.Count)
+                if (supprimees.Count == 0)
+                {
+                    Console.WriteLine($"Aucune entreprise a restaurer dans le secteur {secteur}.");
+                    return;
+                }
+
+                bool continuer = true;
+
+                while (continuer && supprimees.Count > 0)
+                {
+                    AfficherListeRestaurable(supprimees, secteur);
+
+                    Console.Write("Entrez le numero a restaurer (0=stop, 'tous'=tout restaurer): ");
+                    var input = Console.ReadLine()?.ToLower().Trim();
+
+                    switch (input)
+                    {
+                        case "0":
+                            continuer = false;
+                            Console.WriteLine("Operation terminee.");
+                            break;
+                        
+                        case "tous":
+                            RestaurerToutes(supprimees, secteur);
+                            continuer = false;
+                            break;
+                        
+                        default:
+                        {
+                            if (int.TryParse(input, out int choix) && choix > 0 && choix <= supprimees.Count)
+                            {
+                                RestaurerUneEntreprise(supprimees, choix - 1, secteur);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Choix invalide.");
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                var entreprise = supprimees[choix - 1];
-                EnregistrerEntreprise(entreprise, secteur);
-                supprimees.RemoveAt(choix - 1);
-                Console.WriteLine("Entreprise restauree avec succes.");
+                Console.WriteLine($"Erreur lors de la restauration: {ex.Message}");
             }
         }
 
-        // 7. Methode Trier
+        private void AfficherListeRestaurable(List<Entreprise> supprimees, string secteur)
+        {
+            Console.WriteLine($"\nEntreprises supprimees dans le secteur {secteur} ({supprimees.Count} restantes):");
+            for (int i = 0; i < supprimees.Count; i++)
+            {
+                var entreprise = supprimees[i];
+                decimal benefice = entreprise.CalculerBenefice();
+                string statut = benefice <= 0 ? "PERTE" : "BENEFICE";
+
+                // Vérifier si l'ID est deja utilise
+                string conflit = IdExisteDeja(entreprise.Id, secteur) ? " [CONFLIT ID]" : "";
+
+                Console.WriteLine(
+                    $"{i + 1}. {entreprise.Nom} (ID: {entreprise.Id}) - {statut}: {Math.Abs(benefice):C}{conflit}");
+            }
+        }
+
+        private void RestaurerUneEntreprise(List<Entreprise> supprimees, int index, string secteur)
+        {
+            var entreprise = supprimees[index];
+
+            if (IdExisteDeja(entreprise.Id, secteur))
+            {
+                Console.WriteLine($"Conflit: L'ID {entreprise.Id} est deja utilise dans le secteur {secteur}.");
+                Console.WriteLine("Options:");
+                Console.WriteLine("1. Generer un nouvel ID automatique");
+                Console.WriteLine("2. Changer l'ID manuellement");
+                Console.WriteLine("3. Annuler la restauration");
+                Console.Write("Votre choix: ");
+
+                var option = Console.ReadLine();
+                switch (option)
+                {
+                    case "1":
+                        int nouvelId = GenererNouvelId(secteur);
+                        entreprise.Id = nouvelId;
+                        EnregistrerEntreprise(entreprise, secteur);
+                        supprimees.RemoveAt(index);
+                        Console.WriteLine($"Entreprise '{entreprise.Nom}' restauree avec le nouvel ID: {nouvelId}");
+                        break;
+
+                    case "2":
+                        Console.Write($"Entrez le nouvel ID pour '{entreprise.Nom}': ");
+                        if (int.TryParse(Console.ReadLine(), out int idManuel) && idManuel > 0)
+                        {
+                            if (IdExisteDeja(idManuel, secteur))
+                            {
+                                Console.WriteLine("Erreur: Cet ID est deja utilise. Restauration annulee.");
+                            }
+                            else
+                            {
+                                entreprise.Id = idManuel;
+                                EnregistrerEntreprise(entreprise, secteur);
+                                supprimees.RemoveAt(index);
+                                Console.WriteLine($"Entreprise '{entreprise.Nom}' restauree avec l'ID: {idManuel}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("ID invalide. Restauration annulee.");
+                        }
+
+                        break;
+                    default:
+                        Console.WriteLine("Restauration annulee.");
+                        break;
+                }
+            }
+            else
+            {
+                EnregistrerEntreprise(entreprise, secteur);
+                supprimees.RemoveAt(index);
+                Console.WriteLine($"Entreprise '{entreprise.Nom}' restauree avec succes!");
+            }
+        }
+
+        private void RestaurerToutes(List<Entreprise> supprimees, string secteur)
+        {
+            int compteur = 0;
+            int conflits = 0;
+            var aRestaurer = supprimees.ToList();
+
+            foreach (var entreprise in aRestaurer)
+            {
+                if (!IdExisteDeja(entreprise.Id, secteur))
+                {
+                    EnregistrerEntreprise(entreprise, secteur);
+                    supprimees.Remove(entreprise);
+                    compteur++;
+                    Console.WriteLine($"SUCCES: '{entreprise.Nom}' restauree (ID: {entreprise.Id})");
+                }
+                else
+                {
+                    // Pour la restauration multiple, on genere automatiquement un nouvel ID
+                    int nouvelId = GenererNouvelId(secteur);
+                    entreprise.Id = nouvelId;
+                    EnregistrerEntreprise(entreprise, secteur);
+                    supprimees.Remove(entreprise);
+                    compteur++;
+                    Console.WriteLine(
+                        $"SUCCES: '{entreprise.Nom}' restauree avec nouvel ID: {nouvelId} (ancien ID en conflit)");
+                }
+            }
+
+            Console.WriteLine(
+                $"\nRestauration terminee: {compteur} entreprises restaurees, {conflits} conflits resolus.");
+        }
+
+        private int GenererNouvelId(string secteur)
+        {
+            // Trouver le prochain ID disponible dans le secteur
+            int maxId = GetMaxIdDansSecteur(secteur);
+            int maxIdSupprime = elementsSupprimes[secteur].Count > 0 ? elementsSupprimes[secteur].Max(e => e.Id) : 0;
+
+            return Math.Max(maxId, maxIdSupprime) + 1;
+        }
+
+        private int GetMaxIdDansSecteur(string secteur)
+        {
+            return secteur.ToLower() switch
+            {
+                "technologie" => entreprisesTech.Keys.Count > 0 ? entreprisesTech.Keys.Max() : 0,
+                "sante" => entreprisesSante.Keys.Count > 0 ? entreprisesSante.Keys.Max() : 0,
+                "finance" => entreprisesFinance.Keys.Count > 0 ? entreprisesFinance.Keys.Max() : 0,
+                _ => 0
+            };
+        }
+
+        private bool IdExisteDeja(int id, string secteur)
+        {
+            return secteur.ToLower() switch
+            {
+                "technologie" => entreprisesTech.ContainsKey(id),
+                "sante" => entreprisesSante.ContainsKey(id),
+                "finance" => entreprisesFinance.ContainsKey(id),
+                _ => false
+            };
+        }
+
+        //Methode Trier
         public void TrierEntreprises(string secteur, bool ordreCroissant = true)
         {
-            IEnumerable<Entreprise> entreprises = secteur.ToLower() switch
+            var entreprises = secteur.ToLower() switch
             {
-                "technologie" => entreprisesTech.Values.Cast<Entreprise>(),
-                "sante" => entreprisesSante.Values.Cast<Entreprise>(),
-                "finance" => entreprisesFinance.Values.Cast<Entreprise>(),
-                "tous" => entreprisesTech.Values.Cast<Entreprise>()
+                "technologie" => entreprisesTech.Values,
+                "sante" => entreprisesSante.Values,
+                "finance" => entreprisesFinance.Values,
+                "tous" => entreprisesTech.Values
                     .Concat(entreprisesSante.Values.Cast<Entreprise>())
-                    .Concat(entreprisesFinance.Values.Cast<Entreprise>()),
+                    .Concat(entreprisesFinance.Values),
                 _ => Enumerable.Empty<Entreprise>()
             };
 
@@ -265,12 +453,12 @@ namespace AnalyseFinanciereEntreprises.services
 
         // Fonctionnalites supplementaires avec LINQ
 
-        // 1. Rapport global
+        // Rapport global
         public void GenererRapportGlobal()
         {
-            var toutesEntreprises = entreprisesTech.Values.Cast<Entreprise>()
+            var toutesEntreprises = entreprisesTech.Values
                 .Concat(entreprisesSante.Values.Cast<Entreprise>())
-                .Concat(entreprisesFinance.Values.Cast<Entreprise>());
+                .Concat(entreprisesFinance.Values);
 
             Console.WriteLine("=== RAPPORT GLOBAL ===");
             foreach (var entreprise in toutesEntreprises)
@@ -284,7 +472,7 @@ namespace AnalyseFinanciereEntreprises.services
             }
         }
 
-        // 2. Analyse financiere 1: Plus haut revenu
+        // Analyse financiere 1: Plus haut revenu
         public void AfficherPlusHautRevenu()
         {
             var toutesEntreprises = entreprisesTech.Values.Cast<Entreprise>()
@@ -300,7 +488,7 @@ namespace AnalyseFinanciereEntreprises.services
             }
         }
 
-        // 3. Analyse financiere 2: Plus bas revenu
+        // Analyse financiere 2: Plus bas revenu
         public void AfficherPlusBasRevenu()
         {
             var toutesEntreprises = entreprisesTech.Values.Cast<Entreprise>()

@@ -16,12 +16,12 @@ namespace AnalyseFinanciereEntreprises
             bool continuer = true;
 
             // Données d'exemple
-            //InitialiserDonneesExemple(gestionnaire);
+            InitialiserDonneesExemple(gestionnaire);
 
             while (continuer)
             {
                 AfficherMenu();
-                string choix = Console.ReadLine();
+                var choix = Console.ReadLine();
 
                 switch (choix)
                 {

@@ -202,6 +202,7 @@ namespace AnalyseFinanciereEntreprises.services
             }
 
             Console.WriteLine($"\nModification: {entreprise.Nom} (ID: {id})");
+            Console.WriteLine("Saisissez les nouvelles valeurs (laisser vide pour conserver la valeur actuelle):");
 
             ModifierInfosBase(entreprise);
             modifierSpecifique(entreprise);
@@ -498,7 +499,7 @@ namespace AnalyseFinanciereEntreprises.services
                 $"\nRestauration terminee: {compteur} entreprises restaurees, {conflits} conflits resolus.");
         }
 
-        private int GenererNouvelId(string secteur)
+        public int GenererNouvelId(string secteur)
         {
             // Trouver le prochain ID disponible dans le secteur
             int maxId = GetMaxIdDansSecteur(secteur);

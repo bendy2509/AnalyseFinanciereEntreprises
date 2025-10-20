@@ -232,7 +232,8 @@ namespace AnalyseFinanciereEntreprises
             string secteur = Utilitaires.LireSecteurValide();
             
             // La Saisie de l'id
-            int id = Utilitaires.LireEntier("ID");
+            int id = gestionnaire.GenererNouvelId(secteur);
+            Console.WriteLine($"ID attribue automatiquement: {id}");
             
             // la saisie du nom
             string nom = Utilitaires.LireTexteNonVide("Nom");

@@ -32,16 +32,16 @@ namespace AnalyseFinanciereEntreprises.models
             int nombreEmployesTech, decimal budget, int nombreBrevets)
             : base(id, nom, adresse, revenu, depense, pdg, dateCreation)
         {
-            NombreEmployesTech = nombreEmployesTech;
-            Budget = budget;
-            NombreBrevets = nombreBrevets;
+            this.nombreEmployesTech = nombreEmployesTech;
+            this.budget = budget;
+            this.nombreBrevets = nombreBrevets;
         }
 
         // Implementation de la methode abstraite
         public override void AfficherInfosSpecifiques()
         {
             Console.WriteLine($"Nombre d'employes tech: {NombreEmployesTech}");
-            Console.WriteLine($"Budget: {Budget:C}");
+            Console.WriteLine($"Budget: {Budget:N}HTG");
             Console.WriteLine($"Nombre de brevets: {NombreBrevets}");
         }
 
